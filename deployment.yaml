@@ -1,0 +1,34 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: nginx
+  labels:
+    app: nginx
+spec:
+  replicas: 1250
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: nginx
+        environment: e1-np
+    spec:
+      containers:
+      - image: sophos/nginx-prometheus-metrics
+        name: nginx
+        resources:
+          limits:
+            cpu: "100m"
+            memory: "300M"
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 80
+        ports:
+        - containerPort: 80
+          name: http
+        - containerPort: 1314
+          name: http-2
+        - containerPort: 9527
+          name: metrics
